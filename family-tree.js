@@ -41,13 +41,13 @@ class FamilyTree {
 
 var currentNode = null;
 var ancestor;
+let currentChildren;
 
 const input = document.getElementById('input');
 const insert = document.getElementById('insert');
 let head = document.getElementById('head');
 const selectedChild = document.getElementsByClassName('child');
 
-//document.addEventListener('click');
 let dashes = '--';
 
 insert.addEventListener('click', function () {
@@ -56,19 +56,29 @@ insert.addEventListener('click', function () {
   }
   if (currentNode === null) {
     ancestor = new FamilyTree(input.value);
-    head.innerHTML += `<div id=${input.value}><button>${input.value}</button></div>`;
+    let newparent = document.createElement('li');
+    newparent.innerHTML = input.value;
+    newparent.id = input.value;
+    head.appendChild(newparent);
     currentNode = ancestor;
   } else {
     currentNode.insert(input.value);
-    head.innerHTML += `<div id=${input.value}>${dashes}<button>${input.value}</button></div>`;
+    currentChildren = currentNode.children;
+    let ulchild = document.createElement('ul');
+    let newchild = document.createElement('li');
+    newchild.id = input.value;
+    newchild.innerHTML = input.value;
+    head.appendChild(ulchild);
+    ulchild.appendChild(newchild);
+    // head.innerHTML += `<div>||</div><div id=${input.value}>${dashes}<button>${input.value}</button></div>`;
   }
   console.log(currentNode);
 });
 
 head.addEventListener('click', function (child) {
-  if (!currentNode.children.includes(child.target.innerHTML)) {
-    dashes += '--';
+  if (child.target.tagName === 'LI') {
+    currentNode = ancestor.findMember(child.target.id);
+    head = document.getElementById(child.target.id);
+    console.log(head);
   }
-  currentNode = ancestor.findMember(child.target.innerHTML);
-  head = document.getElementById(child.target.innerHTML);
 });
